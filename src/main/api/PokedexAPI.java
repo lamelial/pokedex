@@ -6,14 +6,14 @@ import main.pokemon.Pokemon;
 import main.pokemon.PokemonType;
 
 import com.google.gson.Gson;
-
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
@@ -60,8 +60,12 @@ public class PokedexAPI {
     }
 
     private int extractIdFromUrl(String url) {
-        String[] parts = url.split("/");
-        return Integer.parseInt(parts[parts.length - 2]); // ID is the second to last part
+        System.out.println(url);
+        return Arrays.stream(url.split("/"))
+                .filter(part -> part.matches("\\d+"))
+                .findFirst()
+                .map(Integer::parseInt)
+                .orElseThrow(() -> new IllegalArgumentException("Couldn't extract ID"));
     }
 
 }
