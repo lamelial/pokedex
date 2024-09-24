@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.List;
 
 public class PokedexAPI {
-    private static final String BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
+    private static final String BASE_URL = "https://pokeapi.co/api/v2/";
     private ParsePokemon parser;
     private final int offset = 0;
     private final int limit = 151;
@@ -19,13 +19,21 @@ public class PokedexAPI {
     }
 
     public List<Pokemon> getPokemonList() throws Exception {
-        String jsonResponse = getData(BASE_URL + "?offset=" + offset + "&limit=" + limit);
+        String jsonResponse = getData(BASE_URL + "pokemon/" + "?offset=" + offset + "&limit=" + limit);
         return parser.parsePokemonList(jsonResponse);
     }
 
     public String getDetailedInfo(int pokemonID) throws Exception {
-        String jsonResponse = getData(BASE_URL + pokemonID);
+        String jsonResponse = getData(BASE_URL + "pokemon/" + pokemonID);
+
         return parser.parseDetailedInfo(jsonResponse);
+    }
+
+    public String getEvolutionInfo(int pokemonID) throws Exception {
+        System.out.println(BASE_URL + "pokemon-species/" + pokemonID);
+        String jsonResponse = getData(BASE_URL + "pokemon-species/" + pokemonID);
+
+        return parser.parseEvolution(jsonResponse.toString());
     }
     private String getData(String urlString) throws Exception {
         URL url = new URL(urlString);

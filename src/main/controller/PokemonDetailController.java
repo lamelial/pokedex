@@ -21,10 +21,10 @@ public class PokemonDetailController {
                             .map(type -> type.getDisplayName())
                             .reduce((a, b) -> a + ", " + b).orElse("None"))
                     .append("\n");
-
             String detail = api.getDetailedInfo(pokemon.id());
+            String evolution = api.getEvolutionInfo(pokemon.id());
 
-            info.append(detail);
+            info.append(detail).append("\n").append(evolution);
         } catch (Exception e) {
             e.printStackTrace();
             return "Error fetching details: " + e.getMessage();

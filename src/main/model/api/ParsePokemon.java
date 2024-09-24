@@ -2,6 +2,7 @@ package main.model.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import main.model.pokemon.Pokemon;
 import main.model.pokemon.PokemonType;
@@ -74,7 +75,7 @@ public class ParsePokemon {
     }
 
     private int extractIdFromUrl(String url) {
-        System.out.println(url);
+        System.out.println("Loading Pokemon:" + url);
         return Arrays.stream(url.split("/"))
                 .filter(part -> part.matches("\\d+"))
                 .findFirst()
@@ -117,6 +118,29 @@ public class ParsePokemon {
             stats.append(statName).append(": ").append(baseStat).append("\n"); // Use newline here
         }
         return stats.toString();
+    }
+
+    public String parseEvolution(String json) {
+        JsonObject evolutionChainData = gson.fromJson(json, JsonObject.class);
+
+        JsonObject chain = evolutionChainData.getAsJsonObject("chain");
+        StringBuilder evolutionInfo = new StringBuilder();
+
+        extractEvolutions(chain, evolutionInfo, 0);
+        return evolutionInfo.toString();
+    }
+
+    private void extractEvolutions(JsonObject current, StringBuilder evolutionInfo, int level) {
+        String speciesName = current.getAsJsonObject("species").get("name").getAsString();
+
+        evolutionInfo.append("  ".repeat(level)).append(speciesName).append("\n");
+
+        if (current.has("evolves_to")) {
+            JsonArray evolvesToArray = current.getAsJsonArray("evolves_to");
+            for (JsonElement element : evolvesToArray) {
+                extractEvolutions(element.getAsJsonObject(), evolutionInfo, level + 1);
+            }
+        }
     }
 
 }

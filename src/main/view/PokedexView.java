@@ -14,7 +14,6 @@ import java.util.Objects;
 public class PokedexView extends JFrame {
     private JList<String> pokemonList;
     private DefaultListModel<String> listModel;
-    private JButton loadButton;
     private JButton nextButton;
     private JButton prevButton;
     private JButton selectButton;
@@ -25,12 +24,12 @@ public class PokedexView extends JFrame {
 
     public PokedexView(PokedexController controller) {
         this.controller = controller;
+
         setTitle("Pokédex");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
-        getContentPane().setBackground(new Color(230, 230, 250)); // Light lavender
+        getContentPane().setBackground(new Color(0, 230, 250));
 
         listModel = new DefaultListModel<>();
         pokemonJList = new JList<>(listModel);
@@ -50,16 +49,14 @@ public class PokedexView extends JFrame {
         buttonPanel.setBackground(new Color(176, 224, 230));
         buttonPanel.setLayout(new FlowLayout());
 
-        loadButton = createButton("Load Pokémon", new Color(30, 144, 255), Color.WHITE);
-        loadButton.addActionListener(e->loadPokemon());
         selectButton = createButton("Select Pokémon", new Color(30, 144, 255), Color.WHITE);
         selectButton.addActionListener(e->selectPokemon());
 
-        buttonPanel.add(loadButton);
         buttonPanel.add(selectButton);
 
         add(topPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.SOUTH);
+        loadPokemon();
     }
 
     private JButton createButton(String text, Color bgColour, Color fgColour) {
