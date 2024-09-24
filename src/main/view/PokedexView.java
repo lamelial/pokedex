@@ -5,40 +5,48 @@ import main.model.pokemon.Pokemon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class PokedexView extends JFrame {
+    private JList<String> pokemonList;
+    private DefaultListModel<String> listModel;
+    private JButton loadButton;
+    private PokedexController controller;
 
-    public PokedexView() {
+    public PokedexView(PokedexController controller) {
+        this.controller = controller;
         setTitle("Pokédex");
+        setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        setupComponents();
+        listModel = new DefaultListModel<>();
+        pokemonList = new JList<>(listModel);
+        add(new JScrollPane(pokemonList), BorderLayout.CENTER);
 
-        setSize(800, 600);
-        setLocationRelativeTo(null);
+        loadButton = new JButton("Load Pokémon");
+        loadButton.addActionListener(e -> loadPokemon());
+        add(loadButton, BorderLayout.SOUTH);
     }
 
-    private void setupComponents() {
-        JPanel pokemonPanel = new JPanel();
-        pokemonPanel.setLayout(new GridLayout(0, 1));
-
-        pokemonPanel.add(new JLabel("Pokémon List:"));
-
-        JScrollPane scrollPane = new JScrollPane(pokemonPanel);
-        add(scrollPane, BorderLayout.CENTER);
-
-        JButton refreshButton = new JButton("Refresh");
-        add(refreshButton, BorderLayout.SOUTH);
+    private void loadPokemon() {
+        try {
+            List<Pokemon> pokemons = controller.loadPokemonList(0); // will need to make this adjustable!
+            listModel.clear(); // Clear previous entries
+            for (Pokemon pokemon : pokemons) {
+                listModel.addElement(pokemon.name());
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error loading Pokémon: " + ex.getMessage());
+        }
     }
 
     public static void main(String[] args) {
-        PokedexController controller = new PokedexController();
-        List<Pokemon> pl = controller.getPokemonList(0);
-        pl.stream().forEach(p->System.out.println(p.name()));
         SwingUtilities.invokeLater(() -> {
-            PokedexView mainFrame = new PokedexView();
+            PokedexController controller = new PokedexController();
+            PokedexView mainFrame = new PokedexView(controller);
             mainFrame.setVisible(true);
         });
     }

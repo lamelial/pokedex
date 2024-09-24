@@ -13,7 +13,7 @@ public class PokedexController {
         api = new PokedexAPI();
     }
 
-    public List<Pokemon> getPokemonList(int offset) {
+    public List<Pokemon> loadPokemonList(int offset) {
         try {
             return api.getPokemonList(offset, limit);
         } catch (Exception e) {
@@ -21,5 +21,4 @@ public class PokedexController {
             return List.of();
         }
     }
-
 }
