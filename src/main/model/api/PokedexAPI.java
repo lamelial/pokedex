@@ -12,12 +12,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
     private final Gson gson;
-    //Number of Pokemon to call at a time.
     public PokedexAPI(){
         this.gson = new Gson();
     }
@@ -51,11 +51,8 @@ public class PokedexAPI {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-            List<PokemonType> types = new ArrayList<>();
-            //Pokemon pokemon = new Pokemon(id, name, types);
-            //pokemonList.add(pokemon);
         }
-        return pokemonList;
+        return Collections.unmodifiableList(pokemonList);
     }
 
     private Pokemon createPokemon(JsonObject pokemonObject) throws Exception {
@@ -99,5 +96,4 @@ public class PokedexAPI {
                 .map(Integer::parseInt)
                 .orElseThrow(() -> new IllegalArgumentException("Couldn't extract ID"));
     }
-
 }
