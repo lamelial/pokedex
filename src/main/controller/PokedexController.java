@@ -1,7 +1,7 @@
 package main.controller;
 
-import main.api.PokedexAPI;
-import main.pokemon.Pokemon;
+import main.model.api.PokedexAPI;
+import main.model.pokemon.Pokemon;
 
 import java.util.List;
 

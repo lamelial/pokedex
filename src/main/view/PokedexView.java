@@ -1,7 +1,7 @@
 package main.view;
 
 import main.controller.PokedexController;
-import main.pokemon.Pokemon;
+import main.model.pokemon.Pokemon;
 
 import javax.swing.*;
 import java.awt.*;

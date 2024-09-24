@@ -1,4 +1,4 @@
-package main.pokemon;
+package main.model.pokemon;
 
 import java.util.List;
 

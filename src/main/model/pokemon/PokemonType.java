@@ -1,4 +1,4 @@
-package main.pokemon;
+package main.model.pokemon;
 
 public enum PokemonType {
 }

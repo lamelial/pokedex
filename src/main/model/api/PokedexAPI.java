@@ -1,9 +1,9 @@
-package main.api;
+package main.model.api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import main.pokemon.Pokemon;
-import main.pokemon.PokemonType;
+import main.model.pokemon.Pokemon;
+import main.model.pokemon.PokemonType;
 
 import com.google.gson.Gson;
 import java.io.BufferedReader;
@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
