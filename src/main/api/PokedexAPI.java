@@ -1,8 +1,12 @@
 package main.api;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import main.pokemon.Pokemon;
+import main.pokemon.PokemonType;
 
 import com.google.gson.Gson;
+
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -13,8 +17,12 @@ import java.util.List;
 
 public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
+    private final Gson gson;
     //Number of Pokemon to call at a time.
     private final int limit = 20; // able to change this?
+    public PokedexAPI(){
+        this.gson = new Gson();
+    }
 
     public List<Pokemon> getPokemonList(int offset) throws Exception {
         URL url = new URL(URL + "?offset=" + offset + "&limit=" + limit);
@@ -35,6 +43,7 @@ public class PokedexAPI {
 
     private List<Pokemon> parsePokemonList(String json) {
         List<Pokemon> pokemonList = new ArrayList<>();
+
         return pokemonList;
     }
 
