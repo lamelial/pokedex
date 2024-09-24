@@ -34,7 +34,7 @@ public class ParsePokemon {
                 throw new RuntimeException(e);
             }
         }
-        return Collections.unmodifiableList(pokemonList);
+        return pokemonList;
     }
 
     private Pokemon createPokemon(JsonObject pokemonObject) throws Exception {
