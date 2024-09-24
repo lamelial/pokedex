@@ -18,7 +18,7 @@ import java.util.List;
 public class ParsePokemon {
     private Gson gson;
     public ParsePokemon() {
-        this.gson = this.gson = new Gson();
+        this.gson = new Gson();
     }
     public List<Pokemon> parsePokemonList(String json) {
         List<Pokemon> pokemonList = new ArrayList<>();

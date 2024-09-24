@@ -11,12 +11,14 @@ import java.util.List;
 public class PokedexAPI {
     private static final String BASE_URL = "https://pokeapi.co/api/v2/pokemon/";
     private ParsePokemon parser;
+    private final int offset = 0;
+    private final int limit = 151;
 
     public PokedexAPI() {
         this.parser = new ParsePokemon();
     }
 
-    public List<Pokemon> getPokemonList(int offset, int limit) throws Exception {
+    public List<Pokemon> getPokemonList() throws Exception {
         String jsonResponse = getData(BASE_URL + "?offset=" + offset + "&limit=" + limit);
         return parser.parsePokemonList(jsonResponse);
     }

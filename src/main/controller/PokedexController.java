@@ -15,9 +15,9 @@ public class PokedexController {
         loadedPokemon = new ArrayList<>();
     }
 
-    public List<Pokemon> loadPokemonList(int offset, int limit) {
+    public List<Pokemon> loadPokemonList() {
         try {
-            loadedPokemon = api.getPokemonList(offset, limit);
+            loadedPokemon = api.getPokemonList();
             return loadedPokemon;
         } catch (Exception e) {
             e.printStackTrace();

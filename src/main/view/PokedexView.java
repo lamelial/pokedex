@@ -21,12 +21,10 @@ public class PokedexView extends JFrame {
     private JList pokemonJList;
     private JLabel imageLabel;
     private PokedexController controller;
-    private int currentPage = 0;
-    private int limit = 20;
+
 
     public PokedexView(PokedexController controller) {
         this.controller = controller;
-
         setTitle("Pokédex");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,16 +46,10 @@ public class PokedexView extends JFrame {
 
         loadButton = createButton("Load Pokémon", new Color(30, 144, 255), Color.WHITE);
         loadButton.addActionListener(e->loadPokemon());
-        prevButton = createButton("Previous", new Color(30, 144, 255), Color.WHITE);
-        prevButton.addActionListener(e->loadPreviousPage());
-        nextButton = createButton("Next", new Color(30, 144, 255), Color.WHITE);
-        nextButton.addActionListener(e->loadNextPage());
         selectButton = createButton("Select Pokémon", new Color(30, 144, 255), Color.WHITE);
         selectButton.addActionListener(e->selectPokemon());
 
         buttonPanel.add(loadButton);
-        buttonPanel.add(prevButton);
-        buttonPanel.add(nextButton);
         buttonPanel.add(selectButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
@@ -73,31 +65,17 @@ public class PokedexView extends JFrame {
         return button;
     }
 
-    private void loadNextPage() {
-        currentPage++;
-        loadPokemon();
-    }
-
-    private void loadPreviousPage() {
-        if (currentPage > 0) {
-            currentPage--;
-            loadPokemon();
-        }
-    }
-
     private void selectPokemon() {
         if (!pokemonJList.isSelectionEmpty()) {
             int selectedIndex = pokemonJList.getSelectedIndex();
-            System.out.println(controller.getLoadedPokemon().toString());
             Pokemon selectedPokemon = controller.getLoadedPokemon().get(selectedIndex);
             new PokemonDetailView(selectedPokemon).setVisible(true);
         }
     }
 
-
     private void loadPokemon() {
         try {
-            List<Pokemon> pokemons = controller.loadPokemonList(getOffset(), limit);
+            List<Pokemon> pokemons = controller.loadPokemonList();
             listModel.clear();
             for (Pokemon pokemon : pokemons) {
                 String pokemonTypeInfo = pokemon.pokemonTypes().stream().map(PokemonType::getDisplayName)
@@ -114,10 +92,6 @@ public class PokedexView extends JFrame {
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error loading Pokémon: " + ex.getMessage());
         }
-    }
-
-    private int getOffset(){ // probably move this out of VIEW.
-        return currentPage * limit;
     }
 
     public static void main(String[] args) {
