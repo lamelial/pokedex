@@ -21,4 +21,8 @@ public class PokedexController {
             return List.of();
         }
     }
+
+    public String getImage(String pokemonName){
+
+    }
 }

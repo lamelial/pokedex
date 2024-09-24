@@ -8,9 +8,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Objects;
 
 public class PokedexView extends JFrame {
     private JList<String> pokemonList;
+    private List<Pokemon> loadedPokemon;
     private DefaultListModel<String> listModel;
     private JButton loadButton;
     private JButton nextButton;
@@ -23,6 +25,7 @@ public class PokedexView extends JFrame {
 
     public PokedexView(PokedexController controller) {
         this.controller = controller;
+        this.loadedPokemon = List.of();
         setTitle("Pokédex");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,15 +68,22 @@ public class PokedexView extends JFrame {
     }
 
     private void selectPokemon() {
-        int index = pokemonJList.getSelectedIndex();
-
+        if (!pokemonList.isSelectionEmpty()) {
+            String selectedPokemon = pokemonList.getSelectedValue();
+            String pokemonName = selectedPokemon.split(",")[1].trim();
+            // do i need like a Set of the current pokemon's? i guess the JList works.
+            Pokemon pokemon = loadedPokemon.stream()
+                    .filter(p-> Objects.equals(p.name(), pokemonName))
+                    .reduce( (a, b) -> {throw new IllegalArgumentException();} ).orElseThrow(() -> {throw new IllegalArgumentException();});
+            new PokemonDetailView(pokemon).setVisible(true);
+        }
     }
 
     private void loadPokemon() {
         try {
-            List<Pokemon> pokemons = controller.loadPokemonList(getOffset());
+            List<Pokemon> loadedPokemon = controller.loadPokemonList(getOffset());
             listModel.clear();
-            for (Pokemon pokemon : pokemons) {
+            for (Pokemon pokemon : loadedPokemon) {
                 String pokemonTypeInfo = pokemon.pokemonTypes().stream().map(t->t.getDisplayName())
                                                                         .reduce((a,b) -> a +", " + b)
                                                                         .orElse("No Types");;

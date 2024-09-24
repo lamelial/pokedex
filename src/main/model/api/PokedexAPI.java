@@ -77,6 +77,7 @@ public class PokedexAPI {
         JsonObject pokemonDetail = gson.fromJson(response.toString(), JsonObject.class);
         int height = pokemonDetail.get("height").getAsInt();
         int weight = pokemonDetail.get("weight").getAsInt();
+        String imageUrl = pokemonDetail.getAsJsonObject("sprites").getAsJsonObject("front_default").get("url").getAsString();
 
         List<PokemonType> types = new ArrayList<>();
         JsonArray typesArray = pokemonDetail.getAsJsonArray("types");
@@ -85,7 +86,7 @@ public class PokedexAPI {
             PokemonType type = PokemonType.valueOf(typeName.toUpperCase());
             types.add(type);
         }
-        return new Pokemon(id, name, types, height, weight);
+        return new Pokemon(id, name, types, height, weight, imageUrl);
     }
 
     private int extractIdFromUrl(String url) {
@@ -95,5 +96,9 @@ public class PokedexAPI {
                 .findFirst()
                 .map(Integer::parseInt)
                 .orElseThrow(() -> new IllegalArgumentException("Couldn't extract ID"));
+    }
+
+    public String getDetailedInfo(String pokemonName) {
+
     }
 }
