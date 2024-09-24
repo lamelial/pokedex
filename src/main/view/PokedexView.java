@@ -102,8 +102,15 @@ public class PokedexView extends JFrame {
         if (!pokemonJList.isSelectionEmpty()) {
             String selected = pokemonJList.getSelectedValue().toString();
             int id = controller.getIDFromString(selected);
-            Pokemon selectedPokemon = controller.getLoadedPokemon().get(id-1);
-            new PokemonDetailView(selectedPokemon).setVisible(true);
+            try {
+                Pokemon selectedPokemon = controller.getLoadedPokemon().stream().filter(p -> p.id() == id)
+                        .reduce((a, b) -> { throw new RuntimeException("Selection Error");})
+                        .orElseThrow(()-> {throw new RuntimeException("Selection Error");});
+                new PokemonDetailView(selectedPokemon).setVisible(true);
+            }
+            catch(RuntimeException ex){
+                JOptionPane.showMessageDialog(this, "Error selecting Pokémon: " + ex.getMessage());
+            }
         }
     }
     private void filterPokemonList() {
