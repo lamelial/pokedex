@@ -128,6 +128,8 @@ public class ParsePokemon {
         StringBuilder evolutionInfo = new StringBuilder();
 
         extractEvolutions(chain, evolutionInfo, 0);
+        // trim the extra arrow
+        evolutionInfo.setLength(evolutionInfo.length()-3);
         return evolutionInfo.toString();
     }
     public String getEvolutionURL(String json) {
@@ -141,18 +143,17 @@ public class ParsePokemon {
     }
 
     private void extractEvolutions(JsonObject current, StringBuilder evolutionInfo, int level) {
-        if (current == null) return;
-        String speciesName = current.getAsJsonObject("species").get("name").getAsString();
-        evolutionInfo.append("  ".repeat(level)).append(speciesName).append("\n");
-        if (current.has("evolves_to") && current.getAsJsonArray("evolves_to").size() > 0) {
-            JsonArray evolvesToArray = current.getAsJsonArray("evolves_to");
-            for (JsonElement element : evolvesToArray) {
-                if (element.isJsonObject()) {
-                    extractEvolutions(element.getAsJsonObject(), evolutionInfo, level + 1);
-                }
-            }
-        }
-        System.out.println(speciesName);
+       if (current == null) return;
+       String speciesName = current.getAsJsonObject("species").get("name").getAsString();
+       evolutionInfo.append("  ".repeat(level)).append(speciesName).append("\n");
+       if (current.has("evolves_to") && current.getAsJsonArray("evolves_to").size() > 0) {
+           JsonArray evolvesToArray = current.getAsJsonArray("evolves_to");
+           for (JsonElement element : evolvesToArray) {
+               if (element.isJsonObject()) {
+                   extractEvolutions(element.getAsJsonObject(), evolutionInfo, level + 1);
+               }
+           }
+       }
     }
 
 

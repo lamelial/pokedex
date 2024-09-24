@@ -71,8 +71,9 @@ public class PokedexView extends JFrame {
 
     private void selectPokemon() {
         if (!pokemonJList.isSelectionEmpty()) {
-            int selectedIndex = pokemonJList.getSelectedIndex();
-            Pokemon selectedPokemon = controller.getLoadedPokemon().get(selectedIndex);
+            String selected = pokemonJList.getSelectedValue().toString();
+            int id = controller.getIDFromString(selected);
+            Pokemon selectedPokemon = controller.getLoadedPokemon().get(id-1);
             new PokemonDetailView(selectedPokemon).setVisible(true);
         }
     }
