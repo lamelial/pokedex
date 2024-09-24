@@ -1,7 +1,11 @@
 package main.view;
 
+import main.controller.PokedexController;
+import main.pokemon.Pokemon;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class PokedexView extends JFrame {
 
@@ -30,6 +34,9 @@ public class PokedexView extends JFrame {
     }
 
     public static void main(String[] args) {
+        PokedexController controller = new PokedexController();
+        List<Pokemon> pl = controller.getPokemonList(20);
+        pl.stream().forEach(p->System.out.println(p.name()));
         SwingUtilities.invokeLater(() -> {
             PokedexView mainFrame = new PokedexView();
             mainFrame.setVisible(true);
