@@ -1,5 +1,6 @@
 package main.model.api;
 
+import com.google.gson.JsonObject;
 import main.model.pokemon.Pokemon;
 
 import java.io.BufferedReader;
@@ -31,9 +32,18 @@ public class PokedexAPI {
 
     public String getEvolutionInfo(int pokemonID) throws Exception {
         System.out.println(BASE_URL + "pokemon-species/" + pokemonID);
-        String jsonResponse = getData(BASE_URL + "pokemon-species/" + pokemonID);
 
-        return parser.parseEvolution(jsonResponse.toString());
+        String jsonResponse = getData(BASE_URL + "pokemon-species/" + pokemonID);
+        String url = parser.getEvolutionURL(jsonResponse);
+
+        if (url != null) {
+            // get the evolution chain data
+            String evolutionChainJson = getData(url);
+
+
+            return parser.parseEvolution(evolutionChainJson);
+        }
+        return "No evolution information available.";
     }
     private String getData(String urlString) throws Exception {
         URL url = new URL(urlString);

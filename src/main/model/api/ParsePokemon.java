@@ -121,6 +121,7 @@ public class ParsePokemon {
     }
 
     public String parseEvolution(String json) {
+
         JsonObject evolutionChainData = gson.fromJson(json, JsonObject.class);
 
         JsonObject chain = evolutionChainData.getAsJsonObject("chain");
@@ -129,18 +130,30 @@ public class ParsePokemon {
         extractEvolutions(chain, evolutionInfo, 0);
         return evolutionInfo.toString();
     }
+    public String getEvolutionURL(String json) {
+        JsonObject speciesData = gson.fromJson(json, JsonObject.class);
+        JsonObject evolutionChainUrl = speciesData.getAsJsonObject("evolution_chain");
+
+        if (evolutionChainUrl != null) {
+            return evolutionChainUrl.get("url").getAsString();
+        }
+        return "";
+    }
 
     private void extractEvolutions(JsonObject current, StringBuilder evolutionInfo, int level) {
+        if (current == null) return;
         String speciesName = current.getAsJsonObject("species").get("name").getAsString();
-
         evolutionInfo.append("  ".repeat(level)).append(speciesName).append("\n");
-
-        if (current.has("evolves_to")) {
+        if (current.has("evolves_to") && current.getAsJsonArray("evolves_to").size() > 0) {
             JsonArray evolvesToArray = current.getAsJsonArray("evolves_to");
             for (JsonElement element : evolvesToArray) {
-                extractEvolutions(element.getAsJsonObject(), evolutionInfo, level + 1);
+                if (element.isJsonObject()) {
+                    extractEvolutions(element.getAsJsonObject(), evolutionInfo, level + 1);
+                }
             }
         }
+        System.out.println(speciesName);
     }
+
 
 }

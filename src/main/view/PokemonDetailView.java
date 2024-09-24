@@ -16,7 +16,7 @@ public class PokemonDetailView extends JFrame {
     public PokemonDetailView(Pokemon pokemon) {
         this.controller = new PokemonDetailController();
         setTitle(pokemon.name());
-        setSize(300, 400);
+        setSize(300, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().setBackground(new Color(240, 248, 255)); // Light blue background
 
