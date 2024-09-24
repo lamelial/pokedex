@@ -6,6 +6,6 @@ public record Pokemon(
         int id,
         String name,
         List<PokemonType> pokemonTypes,
-        double height,
-        double weight
+        int height,
+        int weight
 ) { }

@@ -18,12 +18,11 @@ public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
     private final Gson gson;
     //Number of Pokemon to call at a time.
-    private final int limit = 20; // able to change this?
     public PokedexAPI(){
         this.gson = new Gson();
     }
 
-    public List<Pokemon> getPokemonList(int offset) throws Exception {
+    public List<Pokemon> getPokemonList(int offset, int limit) throws Exception {
         URL url = new URL(URL + "?offset=" + offset + "&limit=" + limit);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -47,15 +46,49 @@ public class PokedexAPI {
 
         for (int i = 0; i < results.size(); i++) {
             JsonObject pokemonObject = results.get(i).getAsJsonObject();
-            String name = pokemonObject.get("name").getAsString();
-            String url = pokemonObject.get("url").getAsString();
-            int id = extractIdFromUrl(url);
-            System.out.println(name);
+            try {
+                pokemonList.add(createPokemon(pokemonObject));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             List<PokemonType> types = new ArrayList<>();
             //Pokemon pokemon = new Pokemon(id, name, types);
             //pokemonList.add(pokemon);
         }
         return pokemonList;
+    }
+
+    private Pokemon createPokemon(JsonObject pokemonObject) throws Exception {
+        String name = pokemonObject.get("name").getAsString();
+        String url = pokemonObject.get("url").getAsString();
+        int id = extractIdFromUrl(url);
+        HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+
+        if (connection.getResponseCode() != 200) {
+            throw new RuntimeException("Failed: HTTP error code: " + connection.getResponseCode());
+        }
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        JsonObject pokemonDetail = gson.fromJson(response.toString(), JsonObject.class);
+        int height = pokemonDetail.get("height").getAsInt();
+        int weight = pokemonDetail.get("weight").getAsInt();
+
+        List<PokemonType> types = new ArrayList<>();
+        JsonArray typesArray = pokemonDetail.getAsJsonArray("types");
+        for (int j = 0; j < typesArray.size(); j++) {
+            String typeName = typesArray.get(j).getAsJsonObject().getAsJsonObject("type").get("name").getAsString();
+            PokemonType type = PokemonType.valueOf(typeName.toUpperCase());
+            types.add(type);
+        }
+        return new Pokemon(id, name, types, height, weight);
     }
 
     private int extractIdFromUrl(String url) {

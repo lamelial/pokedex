@@ -35,7 +35,7 @@ public class PokedexView extends JFrame {
 
     public static void main(String[] args) {
         PokedexController controller = new PokedexController();
-        List<Pokemon> pl = controller.getPokemonList(20);
+        List<Pokemon> pl = controller.getPokemonList(0);
         pl.stream().forEach(p->System.out.println(p.name()));
         SwingUtilities.invokeLater(() -> {
             PokedexView mainFrame = new PokedexView();
