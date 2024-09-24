@@ -43,8 +43,25 @@ public class PokedexAPI {
 
     private List<Pokemon> parsePokemonList(String json) {
         List<Pokemon> pokemonList = new ArrayList<>();
+        JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
+        JsonArray results = jsonObject.getAsJsonArray("results");
 
+        for (int i = 0; i < results.size(); i++) {
+            JsonObject pokemonObject = results.get(i).getAsJsonObject();
+            String name = pokemonObject.get("name").getAsString();
+            String url = pokemonObject.get("url").getAsString();
+            int id = extractIdFromUrl(url);
+            System.out.println(name);
+            List<PokemonType> types = new ArrayList<>();
+            //Pokemon pokemon = new Pokemon(id, name, types);
+            //pokemonList.add(pokemon);
+        }
         return pokemonList;
+    }
+
+    private int extractIdFromUrl(String url) {
+        String[] parts = url.split("/");
+        return Integer.parseInt(parts[parts.length - 2]); // ID is the second to last part
     }
 
 }

@@ -1,5 +1,11 @@
 package main.pokemon;
 
-public record Pokemon(int id, String name, PokemonType pokemonType, double height, double weight) {
+import java.util.List;
 
-}
+public record Pokemon(
+        int id,
+        String name,
+        List<PokemonType> pokemonTypes,
+        double height,
+        double weight
+) { }
