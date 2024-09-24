@@ -4,7 +4,7 @@ import java.awt.*;
 
 public enum PokemonType {
 
-    UG("Bug", Color.decode("#A6B91A")),
+    BUG("Bug", Color.decode("#A6B91A")),
     DRAGON("Dragon", Color.decode("#6F35FC")),
     ELECTRIC("Electric", Color.decode("#F7D02C")),
     FAIRY("Fairy", Color.decode("#D685AD")),
@@ -33,5 +33,9 @@ public enum PokemonType {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public Color getDisplayColour() {
+        return displayColour;
     }
 }

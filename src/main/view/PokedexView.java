@@ -37,8 +37,8 @@ public class PokedexView extends JFrame {
         listModel = new DefaultListModel<>();
         pokemonJList = new JList<>(listModel);
         pokemonJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        pokemonJList.setBackground(new Color(255, 255, 255));
-        pokemonJList.setFont(new Font("Arial", Font.BOLD, 14));
+
+        pokemonJList.setCellRenderer(new PokedexListCellRenderer());
         add(new JScrollPane(pokemonJList), BorderLayout.CENTER);
 
         // Create a button panel
