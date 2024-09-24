@@ -17,6 +17,7 @@ import java.util.List;
 
 public class PokedexAPI {
     private static final String URL = "https://pokeapi.co/api/v2/pokemon/";
+    private static final String imageURL = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/";
     private final Gson gson;
     public PokedexAPI(){
         this.gson = new Gson();
@@ -24,6 +25,7 @@ public class PokedexAPI {
 
     public List<Pokemon> getPokemonList(int offset, int limit) throws Exception {
         URL url = new URL(URL + "?offset=" + offset + "&limit=" + limit);
+        //URL url = new URL(URL);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         if (connection.getResponseCode() != 200) {
@@ -39,7 +41,7 @@ public class PokedexAPI {
         return parsePokemonList(response.toString());
     }
 
-    private List<Pokemon> parsePokemonList(String json) {
+    private List<Pokemon> parsePokemonList(String json) { // this could be in different file. Parser and creator.
         List<Pokemon> pokemonList = new ArrayList<>();
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
         JsonArray results = jsonObject.getAsJsonArray("results");
@@ -77,8 +79,11 @@ public class PokedexAPI {
         JsonObject pokemonDetail = gson.fromJson(response.toString(), JsonObject.class);
         int height = pokemonDetail.get("height").getAsInt();
         int weight = pokemonDetail.get("weight").getAsInt();
-        String imageUrl = pokemonDetail.getAsJsonObject("sprites").getAsJsonObject("front_default").get("url").getAsString();
-
+        JsonObject sprites = pokemonDetail.getAsJsonObject("sprites");
+        String imageUrl = "";
+        if (sprites != null && sprites.has("front_default")) {
+            imageUrl = sprites.get("front_default").getAsString();
+        }
         List<PokemonType> types = new ArrayList<>();
         JsonArray typesArray = pokemonDetail.getAsJsonArray("types");
         for (int j = 0; j < typesArray.size(); j++) {
@@ -99,6 +104,6 @@ public class PokedexAPI {
     }
 
     public String getDetailedInfo(String pokemonName) {
-
+        return "";
     }
 }

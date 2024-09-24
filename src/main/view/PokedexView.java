@@ -2,6 +2,7 @@ package main.view;
 
 import main.controller.PokedexController;
 import main.model.pokemon.Pokemon;
+import main.model.pokemon.PokemonType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,6 @@ import java.util.Objects;
 
 public class PokedexView extends JFrame {
     private JList<String> pokemonList;
-    private List<Pokemon> loadedPokemon;
     private DefaultListModel<String> listModel;
     private JButton loadButton;
     private JButton nextButton;
@@ -22,69 +22,85 @@ public class PokedexView extends JFrame {
     private JLabel imageLabel;
     private PokedexController controller;
     private int currentPage = 0;
+    private int limit = 20;
 
     public PokedexView(PokedexController controller) {
         this.controller = controller;
-        this.loadedPokemon = List.of();
+
         setTitle("Pokédex");
         setSize(600, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        getContentPane().setBackground(new Color(230, 230, 250)); // Light lavender
+
         listModel = new DefaultListModel<>();
         pokemonJList = new JList<>(listModel);
         pokemonJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        pokemonJList.setBackground(new Color(255, 255, 255));
+        pokemonJList.setFont(new Font("Arial", Font.BOLD, 14));
         add(new JScrollPane(pokemonJList), BorderLayout.CENTER);
 
+        // Create a button panel
         JPanel buttonPanel = new JPanel();
-        loadButton = new JButton("Load Pokémon");
-        loadButton.addActionListener(e -> loadPokemon());
+        buttonPanel.setBackground(new Color(176, 224, 230));
+        buttonPanel.setLayout(new FlowLayout());
+
+        loadButton = createButton("Load Pokémon", new Color(30, 144, 255), Color.WHITE);
+        loadButton.addActionListener(e->loadPokemon());
+        prevButton = createButton("Previous", new Color(30, 144, 255), Color.WHITE);
+        prevButton.addActionListener(e->loadPreviousPage());
+        nextButton = createButton("Next", new Color(30, 144, 255), Color.WHITE);
+        nextButton.addActionListener(e->loadNextPage());
+        selectButton = createButton("Select Pokémon", new Color(30, 144, 255), Color.WHITE);
+        selectButton.addActionListener(e->selectPokemon());
+
         buttonPanel.add(loadButton);
-
-        prevButton = new JButton("Previous");
-        prevButton.addActionListener(e -> loadPreviousPage());
         buttonPanel.add(prevButton);
-
-        nextButton = new JButton("Next");
-        nextButton.addActionListener(e -> loadNextPage());
         buttonPanel.add(nextButton);
-
-        selectButton = new JButton("Select Pokémon");
-        selectButton.addActionListener(e -> selectPokemon());
         buttonPanel.add(selectButton);
 
         add(buttonPanel, BorderLayout.SOUTH);
     }
+
+    private JButton createButton(String text, Color bgColour, Color fgColour) {
+        JButton button = new JButton(text);
+        button.setBackground(bgColour);
+        button.setForeground(fgColour);
+        button.setFont(new Font("Arial", Font.BOLD, 12));
+        button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        return button;
+    }
+
     private void loadNextPage() {
         currentPage++;
-        loadPokemon(); // Load Pokémon for the next page
+        loadPokemon();
     }
 
     private void loadPreviousPage() {
         if (currentPage > 0) {
             currentPage--;
-            loadPokemon(); // Load Pokémon for the previous page
+            loadPokemon();
         }
     }
 
     private void selectPokemon() {
-        if (!pokemonList.isSelectionEmpty()) {
-            String selectedPokemon = pokemonList.getSelectedValue();
-            String pokemonName = selectedPokemon.split(",")[1].trim();
-            // do i need like a Set of the current pokemon's? i guess the JList works.
-            Pokemon pokemon = loadedPokemon.stream()
-                    .filter(p-> Objects.equals(p.name(), pokemonName))
-                    .reduce( (a, b) -> {throw new IllegalArgumentException();} ).orElseThrow(() -> {throw new IllegalArgumentException();});
-            new PokemonDetailView(pokemon).setVisible(true);
+        if (!pokemonJList.isSelectionEmpty()) {
+            int selectedIndex = pokemonJList.getSelectedIndex();
+            System.out.println(controller.getLoadedPokemon().toString());
+            Pokemon selectedPokemon = controller.getLoadedPokemon().get(selectedIndex);
+            new PokemonDetailView(selectedPokemon).setVisible(true);
         }
     }
 
+
     private void loadPokemon() {
         try {
-            List<Pokemon> loadedPokemon = controller.loadPokemonList(getOffset());
+            List<Pokemon> pokemons = controller.loadPokemonList(getOffset(), limit);
             listModel.clear();
-            for (Pokemon pokemon : loadedPokemon) {
-                String pokemonTypeInfo = pokemon.pokemonTypes().stream().map(t->t.getDisplayName())
+            for (Pokemon pokemon : pokemons) {
+                String pokemonTypeInfo = pokemon.pokemonTypes().stream().map(PokemonType::getDisplayName)
                                                                         .reduce((a,b) -> a +", " + b)
                                                                         .orElse("No Types");;
                 String pokemonInfo = String.format("%d, %s, Type: %s, Height: %d, Weight: %d",
@@ -100,8 +116,8 @@ public class PokedexView extends JFrame {
         }
     }
 
-    private int getOffset(){
-        return currentPage * 20;
+    private int getOffset(){ // probably move this out of VIEW. no logic in view.
+        return currentPage * limit;
     }
 
     public static void main(String[] args) {

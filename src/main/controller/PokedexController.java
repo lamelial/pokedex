@@ -3,26 +3,33 @@ package main.controller;
 import main.model.api.PokedexAPI;
 import main.model.pokemon.Pokemon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PokedexController {
     private final PokedexAPI api;
-    private final int limit = 20; // able to change this?
+    private List<Pokemon> loadedPokemon;
 
     public PokedexController(){
         api = new PokedexAPI();
+        loadedPokemon = new ArrayList<>();
     }
 
-    public List<Pokemon> loadPokemonList(int offset) {
+    public List<Pokemon> loadPokemonList(int offset, int limit) {
         try {
-            return api.getPokemonList(offset, limit);
+            loadedPokemon = api.getPokemonList(offset, limit);
+            return loadedPokemon;
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
         }
     }
 
-    public String getImage(String pokemonName){
+    public List<Pokemon> getLoadedPokemon() {
+        return loadedPokemon;
+    }
 
+    public String getImage(String pokemonName){
+        return "";
     }
 }

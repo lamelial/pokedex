@@ -8,5 +8,5 @@ public record Pokemon(
         List<PokemonType> pokemonTypes,
         int height,
         int weight,
-        String imageURl
+        String imageURL
 ) { }
