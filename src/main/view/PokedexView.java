@@ -19,7 +19,7 @@ public class PokedexView extends JFrame {
     private JButton prevButton;
     private JButton selectButton;
     private JList pokemonJList;
-    private JLabel imageLabel;
+    private JTextField searchField;
     private PokedexController controller;
 
 
@@ -39,7 +39,13 @@ public class PokedexView extends JFrame {
         pokemonJList.setCellRenderer(new PokedexListCellRenderer());
         add(new JScrollPane(pokemonJList), BorderLayout.CENTER);
 
-        // Create a button panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new FlowLayout());
+
+        searchField = new JTextField(20);
+        searchField.addActionListener(e -> filterPokemonList()); // Search on Enter
+        topPanel.add(searchField);
+
         JPanel buttonPanel = new JPanel();
         buttonPanel.setBackground(new Color(176, 224, 230));
         buttonPanel.setLayout(new FlowLayout());
@@ -52,6 +58,7 @@ public class PokedexView extends JFrame {
         buttonPanel.add(loadButton);
         buttonPanel.add(selectButton);
 
+        add(topPanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
@@ -72,26 +79,47 @@ public class PokedexView extends JFrame {
             new PokemonDetailView(selectedPokemon).setVisible(true);
         }
     }
+    private void filterPokemonList() {
+        String searchTerm = searchField.getText().toLowerCase();
+        listModel.clear();
+
+        try {
+            List<Pokemon> pokemons = controller.getLoadedPokemon();
+            for (Pokemon pokemon : pokemons) {
+                String idString = String.valueOf(pokemon.id());
+                if (pokemon.name().toLowerCase().contains(searchTerm) ||
+                        idString.contains(searchTerm)) {
+                    listModel.addElement(createPokemonInfoString(pokemon));
+                }
+            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error filtering Pokémon: " + ex.getMessage());
+        }
+    }
 
     private void loadPokemon() {
         try {
             List<Pokemon> pokemons = controller.loadPokemonList();
             listModel.clear();
             for (Pokemon pokemon : pokemons) {
-                String pokemonTypeInfo = pokemon.pokemonTypes().stream().map(PokemonType::getDisplayName)
-                                                                        .reduce((a,b) -> a +", " + b)
-                                                                        .orElse("No Types");;
-                String pokemonInfo = String.format("%d, %s, Type: %s, Height: %d, Weight: %d",
-                        pokemon.id(),
-                        pokemon.name(),
-                        pokemonTypeInfo,
-                        pokemon.height(),
-                        pokemon.weight());
-                listModel.addElement(pokemonInfo);
+                listModel.addElement(createPokemonInfoString(pokemon));
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Error loading Pokémon: " + ex.getMessage());
         }
+    }
+
+    private String createPokemonInfoString(Pokemon pokemon) {
+        String pokemonTypeInfo = pokemon.pokemonTypes().stream()
+                .map(PokemonType::getDisplayName)
+                .reduce((a, b) -> a + ", " + b)
+                .orElse("No Types");
+        return String.format("%d, %s, Type: %s, Height: %d, Weight: %d",
+                pokemon.id(),
+                pokemon.name(),
+                pokemonTypeInfo,
+                pokemon.height(),
+                pokemon.weight());
     }
 
     public static void main(String[] args) {
