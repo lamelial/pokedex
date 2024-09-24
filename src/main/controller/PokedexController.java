@@ -28,8 +28,4 @@ public class PokedexController {
     public List<Pokemon> getLoadedPokemon() {
         return loadedPokemon;
     }
-
-    public String getImage(String pokemonName){
-        return "";
-    }
 }

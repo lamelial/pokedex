@@ -1,5 +1,7 @@
 package main.view;
 
+import main.controller.PokedexController;
+import main.controller.PokemonDetailController;
 import main.model.pokemon.Pokemon;
 import main.model.pokemon.PokemonType;
 
@@ -9,13 +11,20 @@ import java.net.URL;
 import javax.imageio.ImageIO;
 
 public class PokemonDetailView extends JFrame {
+    private PokemonDetailController controller;
+
     public PokemonDetailView(Pokemon pokemon) {
+        this.controller = new PokemonDetailController();
         setTitle(pokemon.name());
         setSize(300, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(240, 248, 255)); // constant for colours. potentially even UTIL file.
+        getContentPane().setBackground(new Color(240, 248, 255)); // Light blue background
 
+        add(createImagePanel(pokemon), BorderLayout.NORTH);
+        add(createDetailsArea(pokemon), BorderLayout.CENTER);
+    }
+
+    private JPanel createImagePanel(Pokemon pokemon) {
         JLabel imageLabel = new JLabel();
         try {
             URL imageUrl = new URL(pokemon.imageURL());
@@ -26,20 +35,21 @@ public class PokemonDetailView extends JFrame {
             e.printStackTrace();
             imageLabel.setText("Image not available");
         }
+
         JPanel imagePanel = new JPanel();
         imagePanel.setLayout(new FlowLayout());
         imagePanel.add(imageLabel);
-        add(imagePanel, BorderLayout.NORTH);
-
-        JTextArea detailsArea = new JTextArea();
-        detailsArea.setEditable(false);
-        detailsArea.setText(String.format("ID: %d\nType: %s\nHeight: %d\nWeight: %d",
-                pokemon.id(),
-                pokemon.pokemonTypes().stream().map(PokemonType::getDisplayName).reduce((a, b) -> a + ", " + b).orElse(""),
-                pokemon.height(),
-                pokemon.weight()));
-        add(detailsArea, BorderLayout.CENTER);
+        return imagePanel;
     }
 
+    private JTextArea createDetailsArea(Pokemon pokemon) {
+        JTextArea detailsArea = new JTextArea();
+        detailsArea.setEditable(false);
+        detailsArea.setText(getPokemonDetails(pokemon));
+        return detailsArea;
+    }
 
+    private String getPokemonDetails(Pokemon pokemon) {
+        return controller.getDetailedInfo(pokemon);
+    }
 }

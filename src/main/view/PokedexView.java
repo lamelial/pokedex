@@ -116,7 +116,7 @@ public class PokedexView extends JFrame {
         }
     }
 
-    private int getOffset(){ // probably move this out of VIEW. no logic in view.
+    private int getOffset(){ // probably move this out of VIEW.
         return currentPage * limit;
     }
 
