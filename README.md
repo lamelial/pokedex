@@ -4,7 +4,8 @@ The Pokémon Pokedex is a Java-based application that allows users to browse and
 
 ### Features
 Browse through the first 151 Pokémon.
-Search for Pokémon by name or type.
+Search for Pokémon by name or id.
+Filter Pokémon.
 View detailed information, including abilities, stats, and evolutions
 
 ### Usage
