@@ -21,6 +21,8 @@ public class ParsePokemon {
         this.gson = new Gson();
     }
     public List<Pokemon> parsePokemonList(String json) {
+        // Parse the initial list of Pokemon.
+
         List<Pokemon> pokemonList = new ArrayList<>();
         JsonObject jsonObject = gson.fromJson(json, JsonObject.class);
         JsonArray results = jsonObject.getAsJsonArray("results");
@@ -125,7 +127,7 @@ public class ParsePokemon {
         JsonObject evolutionChainData = gson.fromJson(json, JsonObject.class);
         JsonObject chain = evolutionChainData.getAsJsonObject("chain");
         StringBuilder evolutionInfo = new StringBuilder();
-
+        evolutionInfo.append("Evolutions:\n");
         extractEvolutions(chain, evolutionInfo, 0);
 
         evolutionInfo.setLength(evolutionInfo.length());
@@ -142,6 +144,7 @@ public class ParsePokemon {
     }
 
     private void extractEvolutions(JsonObject current, StringBuilder evolutionInfo, int level) {
+       // Recursively traverse the evolution tree.
        if (current == null) return;
        String speciesName = current.getAsJsonObject("species").get("name").getAsString();
        evolutionInfo.append("  ".repeat(level)).append(speciesName).append("\n");
