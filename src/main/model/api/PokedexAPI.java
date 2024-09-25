@@ -1,6 +1,5 @@
 package main.model.api;
 
-import com.google.gson.JsonObject;
 import main.model.pokemon.Pokemon;
 
 import java.io.BufferedReader;
@@ -26,7 +25,6 @@ public class PokedexAPI {
 
     public String getDetailedInfo(int pokemonID) throws Exception {
         String jsonResponse = getData(BASE_URL + "pokemon/" + pokemonID);
-
         return parser.parseDetailedInfo(jsonResponse);
     }
 
@@ -39,8 +37,6 @@ public class PokedexAPI {
         if (url != null) {
             // get the evolution chain data
             String evolutionChainJson = getData(url);
-
-
             return parser.parseEvolution(evolutionChainJson);
         }
         return "No evolution information available.";
@@ -49,7 +45,6 @@ public class PokedexAPI {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
-
         if (connection.getResponseCode() != 200) {
             throw new RuntimeException("Failed: HTTP error code: " + connection.getResponseCode());
         }
@@ -61,7 +56,6 @@ public class PokedexAPI {
                 response.append(inputLine);
             }
         }
-
         return response.toString();
     }
 }

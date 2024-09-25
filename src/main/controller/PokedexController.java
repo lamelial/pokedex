@@ -14,16 +14,14 @@ public class PokedexController {
 
     public PokedexController(){
         api = new PokedexAPI();
-        loadedPokemon = new ArrayList<>(); // should this be a set.
+        loadedPokemon = new ArrayList<>();
     }
 
-    public List<Pokemon> loadPokemonList() {
+    public void loadPokemonList() {
         try {
             loadedPokemon = api.getPokemonList();
-            return loadedPokemon;
         } catch (Exception e) {
             e.printStackTrace();
-            return List.of();
         }
     }
     public int getIDFromString(String string){

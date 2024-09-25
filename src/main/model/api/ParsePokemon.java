@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ParsePokemon {
@@ -55,10 +54,11 @@ public class ParsePokemon {
             response.append(inputLine);
         }
         in.close();
-
         JsonObject pokemonDetail = gson.fromJson(response.toString(), JsonObject.class);
         int height = pokemonDetail.get("height").getAsInt();
         int weight = pokemonDetail.get("weight").getAsInt();
+
+        // Get imageURL
         JsonObject sprites = pokemonDetail.getAsJsonObject("sprites");
         String imageUrl = "";
         if (sprites != null && sprites.has("front_default")) {
@@ -123,13 +123,12 @@ public class ParsePokemon {
     public String parseEvolution(String json) {
 
         JsonObject evolutionChainData = gson.fromJson(json, JsonObject.class);
-
         JsonObject chain = evolutionChainData.getAsJsonObject("chain");
         StringBuilder evolutionInfo = new StringBuilder();
 
         extractEvolutions(chain, evolutionInfo, 0);
-        // trim the extra arrow
-        evolutionInfo.setLength(evolutionInfo.length()-3);
+
+        evolutionInfo.setLength(evolutionInfo.length());
         return evolutionInfo.toString();
     }
     public String getEvolutionURL(String json) {
@@ -155,6 +154,4 @@ public class ParsePokemon {
            }
        }
     }
-
-
 }

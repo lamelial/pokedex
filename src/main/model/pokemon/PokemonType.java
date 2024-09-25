@@ -3,7 +3,6 @@ package main.model.pokemon;
 import java.awt.*;
 
 public enum PokemonType {
-
     BUG("Bug", Color.decode("#A6B91A")),
     DRAGON("Dragon", Color.decode("#6F35FC")),
     ELECTRIC("Electric", Color.decode("#F7D02C")),

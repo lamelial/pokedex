@@ -13,7 +13,7 @@ public class PokedexListCellRenderer extends DefaultListCellRenderer {
         if (value instanceof String) {
             String pokemonInfo = (String) value;
             String[] parts = pokemonInfo.split(", ");
-            String typeInfo = parts[2]; // Adjust based on your format
+            String typeInfo = parts[2];
             String[] types = typeInfo.split(": ")[1].split(", ");
             String typeName = (types[0].trim().toUpperCase());
             try {

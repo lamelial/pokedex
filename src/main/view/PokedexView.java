@@ -6,13 +6,9 @@ import main.model.pokemon.PokemonType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
-import java.util.Objects;
 
 public class PokedexView extends JFrame {
-    private JList<String> pokemonList;
     private DefaultListModel<String> listModel;
     private JButton sortByIdButton;
     private JButton sortByNameButton;

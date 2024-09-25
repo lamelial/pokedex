@@ -1,9 +1,7 @@
 package main.view;
 
-import main.controller.PokedexController;
 import main.controller.PokemonDetailController;
 import main.model.pokemon.Pokemon;
-import main.model.pokemon.PokemonType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +16,7 @@ public class PokemonDetailView extends JFrame {
         setTitle(pokemon.name());
         setSize(300, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        getContentPane().setBackground(new Color(240, 248, 255)); // Light blue background
+        getContentPane().setBackground(new Color(240, 248, 255));
 
         add(createImagePanel(pokemon), BorderLayout.NORTH);
         add(createDetailsArea(pokemon), BorderLayout.CENTER);
